@@ -159,13 +159,37 @@ public class MultiAddressTest {
     public void dns() {
        String dns = "mydomain.com";
        int port = 5001;
-       String address = "/dns6/"+dns+"/tcp/"+port+"/https";
+       String address = "/dns6/"+dns+"/tcp/"+port+"";
        MultiAddress multiAddress = new MultiAddress(address);
        
        Assert.assertEquals("host should be equal to " + dns, dns, multiAddress.getHost());
        Assert.assertEquals("port should be equal to " + port, port, multiAddress.getTCPPort());
     }
 
+   @Test
+    public void ssl1() {
+       String address = "/dns6/foo.com/tcp/443/https";
+       MultiAddress multiAddress = new MultiAddress(address);
+       
+       Assert.assertTrue("multiaddress should be https", multiAddress.isHTTPOverSSL());
+    }
+
+   @Test
+    public void ssl2() {
+       String address = "/ip4/127.0.0.1/udp/9090/quic";
+       MultiAddress multiAddress = new MultiAddress(address);
+       
+       Assert.assertFalse("multiaddress shouldn't be https", multiAddress.isHTTPOverSSL());
+    }
+
+   @Test
+    public void ssl3() {
+       String address = "/ip6/::1/tcp/3217";
+       MultiAddress multiAddress = new MultiAddress(address);
+       
+       Assert.assertFalse("multiaddress shouldn't be https", multiAddress.isHTTPOverSSL());
+    }
+   
     public static byte[] fromHex(String hex) {
         if (hex.length() % 2 != 0)
             throw new IllegalStateException("Uneven number of hex digits!");

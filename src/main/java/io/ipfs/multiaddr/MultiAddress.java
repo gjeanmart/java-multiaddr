@@ -38,6 +38,15 @@ public class MultiAddress
         return true;
     }
 
+    public boolean isHTTPOverSSL() {
+        String[] parts = toString().substring(1).split("/");
+        if (parts.length != 5)
+            return false;
+        if (!parts[4].equals("https"))
+            return false;
+        return true;
+    }  
+    
     public String getHost() {
         String[] parts = toString().substring(1).split("/");
         if (parts[0].startsWith("ip") || parts[0].startsWith("dns"))
